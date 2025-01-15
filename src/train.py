@@ -20,7 +20,7 @@ EPS_DECAY = 0.99
 TAU = 0.005
 LR = 1e-3
 HIDDEN_DIM = 512
-PATH = "project_agent_final.pt" #a modifier dans le rendu
+PATH = "project_agent.pt" #a modifier dans le rendu
 
 class DQN(nn.Module):
     '''

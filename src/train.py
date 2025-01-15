@@ -13,14 +13,14 @@ env = TimeLimit(HIVPatient(domain_randomization=False), max_episode_steps=200)
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 BATCH_SIZE = 1024
-GAMMA = 0.9 #0.85
+GAMMA = 0.85
 EPS_START = 1
 EPS_END = 0.01
-EPS_DECAY = 0.995 # (temporaire), 0.09965 sinon
+EPS_DECAY = 0.99 
 TAU = 0.005
 LR = 1e-3
 HIDDEN_DIM = 512
-PATH = "project_agent.pt" #a modifier dans le rendu
+PATH = "project_agent_final.pt" #a modifier dans le rendu
 
 class DQN(nn.Module):
     '''
@@ -28,8 +28,8 @@ class DQN(nn.Module):
     '''
     def __init__(self, state_dim, n_actions):
         super().__init__()
-        self.val_branch = self._branch(state_dim, n_actions)
-        self.adv_branch = self._branch(state_dim, n_actions)
+        self.value_branch = self._branch(state_dim, n_actions)
+        self.advantage_branch = self._branch(state_dim, n_actions)
 
     def _branch(self, input_dim, output_dim):
         return nn.Sequential(
@@ -41,8 +41,8 @@ class DQN(nn.Module):
         )
     
     def forward(self, x):
-        value = self.val_branch(x)
-        advantage = self.adv_branch(x)
+        value = self.value_branch(x)
+        advantage = self.advantage_branch(x)
         return value + advantage - advantage.mean(dim = 1, keepdim = True)
 
 
@@ -186,7 +186,7 @@ class ReplayMemory_nodeque(object):
 
 def main():
     agent = ProjectAgent()
-    agent.train(1000)
+    agent.train(400)
 
 if __name__ == "__main__":
     main()
